@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manufaktur BBPVP Serang</title>
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1654;
+    --ink: #060b2e;
+    --pill: #dfe3ee;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  /* ===== NAVBAR ===== */
+  .nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px clamp(20px, 6vw, 80px);
+    transition: background .3s, padding .3s, box-shadow .3s;
+  }
+  .nav.scrolled {
+    background: rgba(11,22,84,.88); backdrop-filter: blur(10px);
+    padding-top: 14px; padding-bottom: 14px; box-shadow: 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+  .brand { font-weight: 800; font-size: 1.15rem; letter-spacing: .2px; }
+  .nav ul { display: flex; gap: 28px; list-style: none; }
+  .nav a { color: #fff; text-decoration: none; font-weight: 500; font-size: .92rem; opacity: .85; }
+  .nav ul a { padding: 6px 0; border-bottom: 2px solid transparent; transition: opacity .2s, border-color .2s; }
+  .nav a:hover { opacity: 1; }
+  .nav a.active { opacity: 1; border-color: #8fb0ff; }
+  .burger {
+    display: none; width: 42px; height: 42px; border: 0; border-radius: 10px; cursor: pointer;
+    background: rgba(255,255,255,.14); place-items: center; align-content: center; gap: 5px;
+  }
+  .burger span { display: block; width: 20px; height: 2px; background: #fff; border-radius: 2px; }
+  @media (max-width: 720px) {
+    .burger { display: grid; }
+    .nav.open { background: var(--navy); }
+    .nav.open ul {
+      display: flex; flex-direction: column; gap: 16px;
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: var(--navy); padding: 12px 24px 24px;
+    }
+  }
+  @media (max-width: 720px) { .nav ul { display: none; } }
+
+  /* ===== HERO SLIDESHOW ===== */
+  .hero {
+    position: relative; width: 100%; height: 100vh; min-height: 560px;
+    overflow: hidden; background: var(--ink);
+  }
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0; visibility: hidden;
+    transition: opacity .9s ease, visibility .9s;
+    background-size: cover; background-position: center;
+  }
+  .slide.active { opacity: 1; visibility: visible; z-index: 2; }
+  .slide::before { /* gelap dari kiri */
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.6) 38%, rgba(0,0,0,.15) 75%, rgba(0,0,0,.35) 100%),
+      linear-gradient(0deg, rgba(6,11,46,.55), rgba(6,11,46,0) 40%);
+  }
+  .slide.active .bg { transform: scale(1); }
+  .bg {
+    position: absolute; inset: 0; background-size: cover; background-position: center;
+    transform: scale(1.08); transition: transform 7s ease-out;
+  }
+
+  .content {
+    position: relative; z-index: 3; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 clamp(20px, 6vw, 80px);
+    max-width: 880px;
+  }
+  .dots-deco { display: flex; gap: 6px; margin-bottom: 18px; }
+  .dots-deco i { width: 9px; height: 9px; border-radius: 50%; background: #fff; display: block; }
+
+  .content h1 {
+    font-size: clamp(2.2rem, 6vw, 4.6rem);
+    line-height: 1.05; font-weight: 800; letter-spacing: -1.5px;
+    max-width: 780px;
+  }
+  .content p {
+    margin-top: 22px; max-width: 640px;
+    font-weight: 700; font-size: clamp(.85rem, 1.4vw, 1.02rem); line-height: 1.55;
+    color: #fff;
+  }
+  .btn {
+    margin-top: 28px; align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 36px;
+    padding: 14px 22px; border-radius: 999px;
+    background: var(--pill); color: #1a2038; text-decoration: none;
+    font-weight: 700; font-size: .98rem;
+    transition: transform .2s, background .2s;
+  }
+  .btn:hover { transform: translateX(4px); background: #fff; }
+  .btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+  /* animasi teks saat slide aktif */
+  .content > * { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+  .slide.active .content > * { opacity: 1; transform: none; }
+  .slide.active .content > :nth-child(1) { transition-delay: .25s; }
+  .slide.active .content > :nth-child(2) { transition-delay: .4s; }
+  .slide.active .content > :nth-child(3) { transition-delay: .55s; }
+  .slide.active .content > :nth-child(4) { transition-delay: .7s; }
+
+  /* ===== KONTROL ===== */
+  .arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 6;
+    width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
+    background: rgba(255,255,255,.14); backdrop-filter: blur(6px);
+    color: #fff; display: grid; place-items: center; transition: background .2s;
+  }
+  .arrow:hover { background: rgba(255,255,255,.3); }
+  .arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .prev { left: clamp(10px, 2vw, 28px); }
+  .next { right: clamp(10px, 2vw, 28px); }
+  @media (max-width: 720px) { .arrow { display: none; } }
+
+  .indicators {
+    position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 6;
+    display: flex; gap: 10px;
+  }
+  .indicators button {
+    width: 34px; height: 5px; border-radius: 4px; border: 0; cursor: pointer;
+    background: rgba(255,255,255,.35); position: relative; overflow: hidden; padding: 0;
+  }
+  .indicators button.active::after {
+    content: ""; position: absolute; inset: 0; background: #fff;
+    transform-origin: left; animation: fill var(--dur, 6s) linear forwards;
+  }
+  .hero.paused .indicators button.active::after { animation-play-state: paused; }
+  @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  .counter {
+    position: absolute; right: clamp(20px, 6vw, 80px); bottom: 24px; z-index: 6;
+    font-weight: 800; font-size: .95rem; opacity: .85; letter-spacing: 1px;
+  }
+  @media (max-width: 720px) { .counter { display: none; } }
+
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 0; }
+  .grad { background: linear-gradient(100deg, #4f77a8 0%, #7f93c4 50%, #b4bce0 100%); }
+  .wrap { padding: clamp(56px, 8vw, 110px) clamp(20px, 6vw, 80px); position: relative; overflow: hidden; }
+  .watermark {
+    position: absolute; left: -2vw; bottom: -1vw; z-index: 0; pointer-events: none; user-select: none;
+    font-weight: 800; font-size: clamp(5rem, 12vw, 15rem); line-height: .8; letter-spacing: -2px;
+    white-space: nowrap;
+
+  }
+  .watermark {
+  transform: translateX(var(--wx, 0px));
+  will-change: transform;
+}
+.watermark {
+
+  text-stroke: 2px rgba(11, 22, 84, .15);
+
+  transform: translateX(var(--wx, 0px));
+  will-change: transform;
+}
+  .wrap > *:not(.watermark) { position: relative; z-index: 1; }
+
+  /* ===== TENTANG KAMI ===== */
+  #tentang { background: #fbfcfd; color: var(--navy); padding-bottom: clamp(140px, 22vw, 300px); }
+  #tentang .watermark { color: #e9edf1; }
+  .about { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(28px, 5vw, 70px); align-items: center; max-width: 1150px; margin: 0 auto; }
+  .about-img {
+    aspect-ratio: 16/10; border-radius: 18px; background: var(--navy) center/cover no-repeat;
+    box-shadow: 0 20px 40px -20px rgba(11,22,84,.5);
+  }
+  .about h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
+  .about p { margin-top: 16px; font-weight: 700; line-height: 1.6; font-size: 1.02rem; }
+  .logos { display: flex; align-items: center; gap: 22px; margin-top: 28px; flex-wrap: wrap; }
+  .logo-ph {
+    display: inline-flex; align-items: center; gap: 10px; font-weight: 800; color: var(--navy);
+    padding: 10px 16px; border-radius: 12px; font-size: .9rem;
+  }
+  .logos img { height: 52px; width: auto; }
+  @media (max-width: 800px) { .about { grid-template-columns: 1fr; } }
+
+  /* ===== KATEGORI KELAS ===== */
+  #kelas .inner { display: grid; grid-template-columns: .8fr 2fr; gap: clamp(24px, 5vw, 70px); align-items: center; max-width: 1250px; margin: 0 auto; }
+  #kelas h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
+  #kelas .sub { margin-top: 16px; font-weight: 700; line-height: 1.5; }
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .card {
+    position: relative; aspect-ratio: 16/11; border-radius: 14px; overflow: hidden;
+    display: flex; align-items: flex-end; justify-content: center; text-align: center;
+    text-decoration: none; color: #fff; background-size: cover; background-position: center;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,22,84,.95) 0%, rgba(11,22,84,.55) 40%, rgba(11,22,84,.1) 100%); }
+  .card span { position: relative; padding: 0 16px 22px; font-weight: 800; font-size: clamp(1.05rem, 2vw, 1.6rem); line-height: 1.15; }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 24px 40px -18px rgba(11,22,84,.7); }
+  @media (max-width: 860px) { #kelas .inner { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; } }
+
+  /* ===== INSTRUKTUR ===== */
+  #instruktur { background: var(--navy); }
+  #instruktur h2 { text-align: center; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
+  .team { margin: 44px auto 0; max-width: 1150px; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 22px; }
+  .person { text-align: center; }
+  .avatar {
+    aspect-ratio: 1; border-radius: 18px; background: rgba(255,255,255,.08) center/cover no-repeat;
+    display: grid; place-items: center; border: 1px solid rgba(255,255,255,.12);
+  }
+  .avatar svg { width: 38%; opacity: .35; fill: #fff; }
+  .person h3 { margin-top: 14px; font-size: 1.05rem; font-weight: 800; }
+  .person small { opacity: .7; font-weight: 500; }
+
+  /* ===== TESTIMONI ===== */
+  #testimoni h2 { text-align: center; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
+  #testimoni .watermark { color: rgba(255,255,255,.14); bottom: -4vw; }
+.testi {
+  margin: 40px auto 0;
+  max-width: 1250px;
+  display: flex;                         /* sebelumnya grid */
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;                 /* sembunyikan scrollbar */
+  cursor: grab;
+  padding-bottom: 6px;
+}
+.testi::-webkit-scrollbar { display: none; }
+.testi.dragging { cursor: grabbing; scroll-snap-type: none; }
+
+.t-card {
+  flex: 0 0 clamp(150px, 30%, 295px);    /* lebar tiap kartu */
+  scroll-snap-align: start;
+  /* sisanya (background, padding, dll) tetap */
+}
+
+.t-btn {
+  margin: 30px auto 0;
+  max-width: 1250px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;        /* tombol kiri, panah kanan */
+  gap: 16px;
+}
+.t-arrows { display: flex; gap: 10px; }
+.t-arrows button {
+  width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
+  background: #fff; color: var(--navy);
+  display: grid; place-items: center;
+  transition: transform .2s, background .2s;
+}
+.t-arrows button:hover { background: var(--navy); color: #fff; transform: scale(1.06); }
+.t-arrows svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .t-card { background: #fff; color: var(--navy); border-radius: 16px; padding: 24px; min-height: 190px; display: flex; flex-direction: column; justify-content: space-between; }
+  .t-card p { font-weight: 700; line-height: 1.55; font-size: .95rem; }
+  .t-card .who { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
+      .t-card .pic {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}  .t-card .who b { display: block; font-size: .92rem; }
+  .t-card .who small { opacity: .65; font-weight: 600; }
+  .t-btn {
+    margin: 30px auto 0; max-width: 1250px; display: flex;
+  }
+  .t-btn button {
+    display: inline-flex; align-items: center; gap: 22px; padding: 16px 24px; border-radius: 999px; border: 0; cursor: pointer;
+    background: var(--navy); color: #fff; font: 800 1rem "Plus Jakarta Sans", sans-serif; transition: transform .2s;
+  }
+
+@media (max-width: 600px) {
+  .t-card {
+    flex: 0 0 100%;              /* 1 kartu penuh selebar slider */
+    scroll-snap-align: center;
+  }
+  .testi { gap: 14px; }
+
+  .t-btn button#openT { 
+  font-size: 14px;
+  }
+}
+  .t-btn button:hover { transform: translateX(4px); }
+  .t-btn svg { width: 22px; height: 22px; fill: #fff; }
+  dialog { border: 0; border-radius: 18px; padding: 28px; width: min(92vw, 440px); color: var(--navy); font-family: inherit; }
+  dialog::backdrop { background: rgba(6,11,46,.65); backdrop-filter: blur(3px); }
+  dialog h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 16px; }
+  dialog label { display: block; font-weight: 700; font-size: .85rem; margin: 12px 0 6px; }
+  dialog input, dialog textarea {
+    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #ccd2e6; font: 500 .95rem inherit; font-family: inherit; color: var(--navy);
+  }
+  dialog textarea { min-height: 110px; resize: vertical; }
+  .d-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .d-actions button { padding: 11px 20px; border-radius: 999px; border: 0; cursor: pointer; font: 800 .92rem "Plus Jakarta Sans", sans-serif; }
+  .d-cancel { background: #e6e9f4; color: var(--navy); }
+  .d-send { background: var(--navy); color: #fff; }
+
+  /* ===== STATISTIK ===== */
+  .stats { background: #070e3b; padding: 46px clamp(20px, 6vw, 80px); }
+  .stats-grid { max-width: 1150px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+  .stat b { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -1px; }
+  .stat i { font-style: normal; font-size: clamp(1.6rem, 3.4vw, 2.4rem); font-weight: 800; color: #8fb0ff; margin-left: 2px; }
+  .stat span { display: block; margin-top: 6px; font-weight: 700; opacity: .75; font-size: .92rem; }
+  @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); row-gap: 32px; } }
+
+  /* ===== KARTU KELAS (hover) ===== */
+  .card { background: none; }
+  .card .zoom { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; transition: transform .7s ease; }
+  .card::before { z-index: 1; }
+  .card:hover .zoom, .card:focus-within .zoom { transform: scale(1.1); }
+  .card .c-body { position: relative; z-index: 2; width: 100%; padding: 0 18px 20px; }
+  .card .c-title { display: block; padding: 0; }
+  .card .c-extra { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .45s ease, opacity .35s ease, margin .35s; }
+  .card:hover .c-extra, .card:focus-within .c-extra { max-height: 170px; opacity: 1; margin-top: 10px; }
+  .c-desc { font-weight: 600; font-size: .9rem; line-height: 1.45; opacity: .92; }
+  .c-btn { display: inline-block; margin-top: 12px; padding: 9px 18px; border-radius: 999px; background: #fff; color: var(--navy); font-weight: 800; font-size: .85rem; text-decoration: none; }
+  .c-btn:hover { background: #dfe3ee; }
+  @media (hover: none) { .card .c-extra { max-height: 170px; opacity: 1; margin-top: 10px; } }
+
+  /* ===== ANIMASI SAAT SCROLL ===== */
+  .js .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+    .bg, .slide { transition: none; }
+  }
+
+  /* ===== TOMBOL WHATSAPP ===== */
+  .wa-float {
+    position: fixed; right: clamp(16px, 3vw, 32px); bottom: clamp(16px, 3vw, 32px); z-index: 50;
+    width: 58px; height: 58px; border-radius: 50%; background: #25d366;
+    display: grid; place-items: center; box-shadow: 0 10px 24px -6px rgba(0,0,0,.45);
+    transition: transform .2s;
+  }
+  .wa-float:hover { transform: scale(1.08); }
+  .wa-float::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25d366; animation: ring 2.2s ease-out infinite; }
+  .wa-float svg { width: 28px; height: 28px; fill: #fff; }
+  @keyframes ring { from { transform: scale(1); opacity: .7; } to { transform: scale(1.6); opacity: 0; } }
+
+  /* ===== LOADING SCREEN + PROGRESS ===== */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loader {
+    position: fixed; inset: 0; z-index: 100; background: var(--navy);
+    display: grid; place-items: center; align-content: center; gap: 20px;
+    transition: opacity .6s, visibility .6s;
+    animation: ldout .6s 3.5s forwards; /* cadangan: tetap hilang walau JS gagal */
+  }
+  #loader.hide { opacity: 0; visibility: hidden; }
+  @keyframes ldout { to { opacity: 0; visibility: hidden; } }
+  .ld-logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.6rem; color: #fff; }
+  .ld-logo .gear { width: 36px; color: #8fb0ff; animation-duration: 3s; }
+  .ld-bar { width: 190px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.18); overflow: hidden; }
+  .ld-bar i { display: block; height: 100%; background: #8fb0ff; animation: ldfill 1.4s ease-out forwards; }
+  @keyframes ldfill { from { width: 0; } to { width: 100%; } }
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; pointer-events: none; }
+  .progress i { display: block; height: 100%; background: linear-gradient(90deg, #8fb0ff, #fff); transform-origin: left; transform: scaleX(0); }
+
+  /* ===== DEKORASI HERO (blueprint + gear + parallax) ===== */
+  .hero-deco { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+  .deco-grid {
+    position: absolute; inset: -30px;
+    background-image: linear-gradient(rgba(143,176,255,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(143,176,255,.13) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: linear-gradient(270deg, #000 0%, transparent 65%);
+    mask-image: linear-gradient(270deg, #000 0%, transparent 65%);
+    transform: translate(calc(var(--mx, 0) * -14px), calc(var(--my, 0) * -14px));
+  }
+  .g-wrap { position: absolute; color: rgba(143,176,255,.45); }
+  .g1 { right: -7vw; top: 12%; width: clamp(240px, 34vw, 520px);
+    transform: translate(calc(var(--mx, 0) * -34px), calc(var(--my, 0) * -34px + var(--sy, 0) * .18px)); }
+  .g2 { right: 24vw; bottom: 5%; width: clamp(110px, 15vw, 230px);
+    transform: translate(calc(var(--mx, 0) * 26px), calc(var(--my, 0) * 26px + var(--sy, 0) * .3px)); }
+  .gear { width: 100%; height: auto; display: block; fill: none; stroke: currentColor; stroke-width: 1.6; animation: spin 40s linear infinite; }
+  .gear.rev { animation-direction: reverse; animation-duration: 26s; }
+  @media (max-width: 720px) { .g2 { display: none; } .g1 { opacity: .6; } }
+
+  /* ===== MARQUEE ===== */
+  .marquee { background: #fff; color: var(--navy); overflow: hidden; padding: 16px 0; border-bottom: 1px solid #dfe3ee; }
+  .marquee .track { display: flex; width: max-content; animation: mq 30s linear infinite; }
+  .marquee:hover .track { animation-play-state: paused; }
+  .m-set { display: flex; flex-shrink: 0; }
+  .m-set span { display: flex; align-items: center; gap: 56px; padding-left: 56px; font-weight: 800; font-size: 1.02rem; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; }
+  .m-set span::after { content: "\2726"; color: #4f77a8; }
+  @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ===== EYEBROW ===== */
+  .eyebrow { display: block; text-align: center; font-weight: 800; letter-spacing: 3px; font-size: .78rem; color: #4f77a8; margin-bottom: 10px; text-transform: uppercase; }
+
+  /* ===== GALERI ===== */
+  #galeri { background: #fbfcfd; color: var(--navy); }
+  #galeri h2 { text-align: center; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
+  .gallery { max-width: 1150px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: clamp(130px, 16vw, 200px); gap: 14px; }
+  .gal-item { position: relative; overflow: hidden; border: 0; padding: 0; border-radius: 16px; cursor: zoom-in; background: var(--navy); color: #fff; font-family: inherit; }
+  .gal-item .zoom { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .7s ease; }
+  .gal-item:hover .zoom, .gal-item:focus-visible .zoom { transform: scale(1.1); }
+  .gal-item .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 38px 16px 14px; text-align: left; font-weight: 800; font-size: .95rem;
+    background: linear-gradient(0deg, rgba(6,11,46,.88), transparent); opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .3s; }
+  .gal-item:hover .cap, .gal-item:focus-visible .cap { opacity: 1; transform: none; }
+  @media (hover: none) { .gal-item .cap { opacity: 1; transform: none; } }
+  .gg1 { grid-column: span 2; grid-row: span 2; }
+  .gg4, .gg5, .gg6 { grid-column: span 2; }
+  @media (max-width: 700px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .gg4, .gg5 { grid-column: span 1; }
+    .gg6 { grid-column: span 2; }
+  }
+  #lb { width: min(92vw, 1000px); padding: 0; background: transparent; overflow: visible; }
+  .lb-img { aspect-ratio: 16/10; border-radius: 16px; background: var(--navy) center/cover no-repeat; }
+  .lb-cap { margin-top: 12px; color: #fff; font-weight: 800; text-align: center; }
+  .lb-close { position: absolute; top: -14px; right: -6px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: #fff; color: var(--navy); font-size: 1.3rem; font-weight: 800; cursor: pointer; }
+
+  /* ===== FAQ ===== */
+  #faq { background: #f3f5fb; color: var(--navy); }
+  #faq h2 { text-align: center; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
+  .faq-list { max-width: 820px; margin: 40px auto 0; display: grid; gap: 12px; }
+  details.faq { background: #fff; border-radius: 14px; padding: 0 22px; box-shadow: 0 8px 20px -14px rgba(11,22,84,.5); }
+  details.faq summary { list-style: none; cursor: pointer; padding: 20px 0; font-weight: 800; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::after { content: "+"; font-size: 1.6rem; line-height: 1; color: #4f77a8; transition: transform .3s; }
+  details.faq[open] summary::after { transform: rotate(45deg); }
+  details.faq p { padding: 0 0 20px; font-weight: 600; line-height: 1.6; opacity: .85; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gear, .marquee .track, .ld-bar i { animation: none; }
+  }
+
+  /* ===== FOOTER ===== */
+  footer { background: var(--navy); padding: clamp(40px, 6vw, 70px) clamp(20px, 6vw, 80px) 36px; }
+  .map { max-width: 1250px; margin: 0 auto; height: clamp(220px, 30vw, 330px); border-radius: 14px; overflow: hidden; background: #000; }
+  .map iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .f-cols { max-width: 1250px; margin: 44px auto 0; display: grid; grid-template-columns: 1fr 1fr 1.2fr 1.2fr; gap: 30px; }
+  .f-cols h4 { font-size: 1.25rem; font-weight: 800; margin-bottom: 14px; }
+  .f-cols ul { list-style: none; display: grid; gap: 9px; }
+  .f-cols a { color: #fff; text-decoration: none; font-weight: 500; opacity: .85; }
+  .f-cols a:hover { opacity: 1; text-decoration: underline; }
+  .f-cols p { opacity: .85; line-height: 1.6; font-weight: 500; font-size: .95rem; }
+  .copy { max-width: 1250px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.14); opacity: .6; font-size: .85rem; }
+  @media (max-width: 860px) { .f-cols { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .f-cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="loader" aria-hidden="true">
+  <div class="ld-logo"><div class="ld-logo">
+  <img src="image/logoputih.png" class="gear" alt="Logo Manufaktur">
+</div>Manufaktur</div>
+  <div class="ld-bar"><i></i></div>
+</div>
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+<header class="nav">
+  <div class="brand"><div class="ld-logo">
+  <img src="image/logoputih.png" class="gear" alt="Logo Manufaktur">
+Manufaktur</div></div>
+
+  <ul>
+    <li><a href="#hero">Beranda</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#tentang">About</a></li>
+    <li><a href="#kelas">Kelas</a></li>
+    <li><a href="#galeri">Galeri</a></li>
+    <li><a href="#testimoni">Testimoni</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="burger" aria-label="Buka menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+
+<!--
+  GANTI FOTO: isi data-img dengan path foto kamu (mis. "img/cnc.jpg").
+  Kalau foto belum ada, otomatis tampil background gradasi biru.
+-->
+<section class="hero" id="hero" aria-roledescription="carousel" aria-label="Slideshow Kejuruan Manufaktur">
+
+  <div class="slide" data-img="image/CNC.jpg" data-fallback="linear-gradient(135deg,#1c2a66,#0b1654 60%,#05092b)">
+    <div class="bg"></div>
+    <div class="content">
+      <div class="dots-deco"><i></i><i></i><i></i><i></i></div>
+      <h1>Pengoprasian Mesin CNC Bubut Dasar.</h1>
+      <p>Program Pelatihan Pengoperasian Mesin CNC Bubut Dasar dirancang untuk membekali peserta dengan kompetensi dalam mengoperasikan mesin CNC (Computer Numerical Control) dan mesin bubut dasar secara aman, efisien, dan sesuai standar industri.</p>
+      <a class="btn" href="#kelas">Lihat Kelas <svg viewBox="0 0 24 24"><path d="M3 3l18 9-18 9 4-9z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="slide" data-img="image/CAD.jpg" data-fallback="linear-gradient(135deg,#27407f,#0f1c5c 60%,#060b2e)">
+    <div class="bg"></div>
+    <div class="content">
+      <div class="dots-deco"><i></i><i></i><i></i><i></i></div>
+      <h1>Penggambaran Model 3D dengan CAD.</h1>
+      <p>Program Pelatihan Penggambaran Model 3D dengan CAD dirancang untuk membekali peserta dengan kemampuan menggambar dan memodelkan objek teknik dalam format 3D menggunakan perangkat lunak CAD.</p>
+      <a class="btn" href="#kelas">Lihat Kelas <svg viewBox="0 0 24 24"><path d="M3 3l18 9-18 9 4-9z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="slide" data-img="image/bubut.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f 60%,#070c33)">
+    <div class="bg"></div>
+    <div class="content">
+      <div class="dots-deco"><i></i><i></i><i></i><i></i></div>
+      <h1>Pengoperasian Mesin Bubut.</h1>
+      <p>Program Pelatihan Pengoperasian Mesin Bubut dirancang untuk membekali peserta dengan kemampuan dasar dalam mengoperasikan mesin bubut konvensional secara aman, efektif, dan sesuai standar industri.</p>
+      <a class="btn" href="#kelas">Lihat Kelas <svg viewBox="0 0 24 24"><path d="M3 3l18 9-18 9 4-9z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="slide" data-img="img/predictive-maintenance.jpg" data-fallback="linear-gradient(135deg,#2b3350,#12183a 60%,#05071f)">
+    <div class="bg"></div>
+    <div class="content">
+      <div class="dots-deco"><i></i><i></i><i></i><i></i></div>
+      <h1>Predictive Maintenance untuk Mesin Produksi</h1>
+      <p>Program Pelatihan Predictive Maintenance untuk Mesin Produksi dirancang untuk membekali peserta dengan kemampuan memantau kondisi mesin menggunakan sensor dan mikrokontroler, sehingga kerusakan dapat diprediksi sebelum terjadi.</p>
+      <a class="btn" href="#kelas">Lihat Kelas <svg viewBox="0 0 24 24"><path d="M3 3l18 9-18 9 4-9z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="slide" data-img="image/bbpvp.jpg" data-fallback="linear-gradient(135deg,#3a5a99,#16286b 60%,#070c33)">
+    <div class="bg"></div>
+    <div class="content">
+      <div class="dots-deco"><i></i><i></i><i></i><i></i></div>
+      <h1>Kejuruan Manufaktur BBPVP Serang.</h1>
+      <p>Kejuruan Teknik Manufaktur di BBPVP Serang adalah bidang pelatihan vokasi milik Kementerian Ketenagakerjaan RI guna mencetak tenaga kerja siap pakai dan bersertifikasi.</p>
+      <a class="btn" href="#tentang">Selengkapnya <svg viewBox="0 0 24 24"><path d="M3 3l18 9-18 9 4-9z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="hero-deco" aria-hidden="true">
+    <div class="deco-grid"></div>
+    <div class="g-wrap g1"><svg class="gear" data-teeth="14" viewBox="-100 -100 200 200"></svg></div>
+    <div class="g-wrap g2"><svg class="gear rev" data-teeth="10" viewBox="-100 -100 200 200"></svg></div>
+  </div>
+
+  <button class="arrow prev" aria-label="Sebelumnya"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="arrow next" aria-label="Berikutnya"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+
+  <div class="indicators" id="indicators"></div>
+  <div class="counter" id="counter">01 / 05</div>
+</section>
+
+<!-- ===== MARQUEE ===== -->
+<!-- <div class="marquee" aria-hidden="true">
+  <div class="track">
+    <div class="m-set"><span>Mesin Bubut</span><span>CNC</span><span>CAD 3D</span><span>Predictive Maintenance</span><span>Siap Kerja</span><span>Bersertifikasi</span></div>
+    <div class="m-set"><span>Mesin Bubut</span><span>CNC</span><span>CAD 3D</span><span>Predictive Maintenance</span><span>Siap Kerja</span><span>Bersertifikasi</span></div>
+  </div>
+</div> -->
+
+<!-- ===== STATISTIK (angka animasi) =====
+     GANTI angka di data-count dengan data asli BBPVP. Hanya "4 Kelas" yang sesuai desain; sisanya contoh. -->
+<!-- <section class="stats" id="statistik">
+  <div class="stats-grid">
+    <div class="stat"><b data-count="4">0</b><i></i><span>Kelas Pelatihan</span></div>
+    <div class="stat"><b data-count="1200">0</b><i>+</i><span>Alumni Terlatih</span></div>
+    <div class="stat"><b data-count="90">0</b><i>%</i><span>Lulus Sertifikasi</span></div>
+    <div class="stat"><b data-count="10">0</b><i>+</i><span>Mitra Industri</span></div>
+  </div> -->
+</section>
+
+<!-- ===== TENTANG KAMI ===== -->
+<section class="wrap" id="tentang">
+  <div class="about">
+    <div class="about-img" data-img="img/tentang.jpg" role="img" aria-label="Foto kejuruan manufaktur"></div>
+    <div>
+      <h2>Tentang Kami</h2>
+      <p>Kejuruan Teknik Manufaktur di BBPVP Serang adalah bidang pelatihan vokasi milik Kementerian Ketenagakerjaan RI guna mencetak tenaga kerja siap pakai dan bersertifikasi.</p>
+      <div class="logos">
+        <!-- Ganti dengan logo resmi: <img src="img/logo-kemnaker.png" alt="Kemnaker"> -->
+        <span class="logo-ph"><img src="image/kemnaker.png" alt="Kemnaker"> </span>
+        <span class="logo-ph"><img src="image/pelatihanvokasi.png" alt="Kemnaker"></span>
+      </div>
+    </div>
+  </div>
+  <div class="watermark" aria-hidden="true">MANUFAKTUR</div>
+</section>
+
+<!-- ===== KATEGORI KELAS ===== -->
+<section class="wrap grad" id="kelas">
+  <div class="inner">
+    <div>
+      <h2>Kategori Kelas</h2>
+      <p class="sub">Kategori Kelas yang ada di Kejuruan Manufaktur</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="zoom" data-img="image/bubut.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f)"></div>
+        <div class="c-body">
+          <span class="c-title">Pengoperasian Mesin Bubut.</span>
+          <div class="c-extra"><p class="c-desc">Dasar pengoperasian mesin bubut konvensional secara aman dan sesuai standar industri.</p></div>
+          <a href="kelasbubut.html" class="c-btn">Lihat Kelas</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="zoom" data-img="image/cnc.jpg" data-fallback="linear-gradient(135deg,#1c2a66,#0b1654)"></div>
+        <div class="c-body">
+          <span class="c-title">Pengoperasian Mesin CNC Bubut.</span>
+          <div class="c-extra"><p class="c-desc">Mengoperasikan mesin CNC dan bubut dasar secara aman dan efisien.</p>   </div>
+          <a href="kelascnc.html" class="c-btn">Lihat Kelas</a></div>
+     
+      </article>
+      <article class="card">
+        <div class="zoom" data-img="image/cad.jpg" data-fallback="linear-gradient(135deg,#27407f,#0f1c5c)"></div>
+        <div class="c-body">
+          <span class="c-title">Penggambaran Model 3D dengan CAD.</span>
+          <div class="c-extra"><p class="c-desc">Menggambar dan memodelkan objek teknik dalam format 3D dengan perangkat lunak CAD.</p></div>
+          <a href="kelascad.html" class="c-btn">Lihat Kelas</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="zoom" data-img="image/predictive.jpg" data-fallback="linear-gradient(135deg,#2b3350,#12183a)"></div>
+        <div class="c-body">
+          <span class="c-title">Predictive Maintenance untuk Mesin Produksi</span>
+          <div class="c-extra"><p class="c-desc">Memantau kondisi mesin dengan sensor untuk memprediksi kerusakan sebelum terjadi.</p></div>
+          <a href="kelaspredictive.html" class="c-btn ">Lihat Kelas</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALERI ===== -->
+<section class="wrap" id="galeri">
+  <span class="eyebrow">Galeri</span>
+  <h2>Suasana Pelatihan</h2>
+  <!-- Ganti img/galeri-1.jpg ... galeri-6.jpg dengan foto kegiatan asli. Klik foto untuk memperbesar. -->
+  <div class="gallery">
+    <button class="gal-item gg1" type="button"><div class="zoom" data-img="image/dokumentasi1.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f)"></div><span class="cap">Praktik Mesin Bubut</span></button>
+    <button class="gal-item gg2" type="button"><div class="zoom" data-img="image/dokumentasi2.jpg" data-fallback="linear-gradient(135deg,#1c2a66,#0b1654)"></div><span class="cap">Pengoperasian CNC</span></button>
+    <button class="gal-item gg3" type="button"><div class="zoom" data-img="image/dokumentasi3.jpg" data-fallback="linear-gradient(135deg,#27407f,#0f1c5c)"></div><span class="cap">Desain CAD 3D</span></button>
+    <button class="gal-item gg4" type="button"><div class="zoom" data-img="image/dokumentasi4.jpg" data-fallback="linear-gradient(135deg,#3a5a99,#16286b)"></div><span class="cap">Workshop Manufaktur</span></button>
+    <button class="gal-item gg5" type="button"><div class="zoom" data-img="image/dokumentasi5.jpg" data-fallback="linear-gradient(135deg,#2b3350,#12183a)"></div><span class="cap">Predictive Maintenance</span></button>
+    <button class="gal-item gg6" type="button"><div class="zoom" data-img="image/dokumentasi6.jpg" data-fallback="linear-gradient(135deg,#4f77a8,#1c2a66)"></div><span class="cap">Kegiatan Pelatihan</span></button>
+  </div>
+</section>
+
+<!-- ===== INSTRUKTUR ===== -->
+<section class="wrap" id="instruktur">
+  <h2>Instruktur Manufaktur</h2>
+  <div class="team">
+    <!-- Ganti nama, jabatan, dan foto (data-img) dengan data instruktur asli -->
+    <div class="person">
+      <div class="avatar" data-img=""><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg></div>
+      <h3>Agus Setiawan, S.T</h3><small>Instruktur Mesin Bubut</small>
+    </div>
+    <div class="person">
+      <div class="avatar" data-img=""><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg></div>
+      <h3>Joko Riyadi, S.T., M.Eng</h3><small>Instruktur CNC</small>
+    </div>
+    <div class="person">
+      <div class="avatar" data-img=""><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg></div>
+      <h3>Nur Akbarudin, S.T., M.T</h3><small>Instruktur CAD</small>
+    </div>
+    <div class="person">
+      <div class="avatar" data-img=""><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg></div>
+      <h3>Widi Andriyanto, S.T</h3><small>Instruktur Predictive Maintenance</small>
+    </div>
+        <div class="person">
+      <div class="avatar" data-img=""><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg></div>
+      <h3>Ryan Aprianna Jaya, S.T</h3><small>Instruktur Predictive Maintenance</small>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONI ===== -->
+<section class="wrap grad" id="testimoni">
+  <h2>Testimoni Siswa</h2>
+  <div class="testi" id="testi">
+  <div class="t-card t-empty"><p>Memuat testimoni...</p></div>
+</div>
+
+<div class="t-btn">
+  <button id="openT" onclick="location.href='testimoni.html'">Tulis Testimoni<svg viewBox="0 0 24 24"><path d="M3 3l18 9-18 9 4-9z"/></svg></button>
+<div class="t-arrows">
+    <button id="tPrev" aria-label="Sebelumnya"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="tNext" aria-label="Berikutnya"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
+  <div class="watermark" aria-hidden="true">MANUFAKTUR</div>
+</section>
+
+<!-- ===== FAQ =====
+     Jawaban bertanda "(isi ...)" perlu disesuaikan dengan ketentuan resmi BBPVP. -->
+<section class="wrap" id="faq">
+  <span class="eyebrow">FAQ</span>
+  <h2>Pertanyaan Umum</h2>
+  <div class="faq-list">
+    <details class="faq"><summary>Bagaimana cara mendaftar?</summary><p>Pilih kelas yang diminati lalu klik tombol Daftar, atau hubungi kami lewat WhatsApp. Tim kami akan menjelaskan jadwal dan persyaratannya.</p></details>
+    <details class="faq"><summary>Apakah peserta mendapat sertifikat?</summary><p>Kejuruan Teknik Manufaktur BBPVP Serang bertujuan mencetak tenaga kerja siap pakai dan bersertifikasi. Detail jenis sertifikat dapat ditanyakan ke admin.</p></details>
+    <details class="faq"><summary>Apakah harus punya pengalaman sebelumnya?</summary><p>(Isi sesuai ketentuan BBPVP, misalnya apakah kelas dasar terbuka untuk pemula.)</p></details>
+    <details class="faq"><summary>Berapa biaya dan durasi pelatihan?</summary><p>(Isi sesuai ketentuan BBPVP untuk tiap kelas.)</p></details>
+  </div>
+</section>
+
+<dialog id="lb">
+  <div class="lb-img"></div>
+  <div class="lb-cap"></div>
+  <button class="lb-close" type="button" aria-label="Tutup">&times;</button>
+</dialog>
+
+<!-- ===== FOOTER ===== -->
+<footer id="kontak">
+  <div class="map">
+    <iframe title="Lokasi BBPVP Serang" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+      src="https://maps.google.com/maps?q=BBPVP%20Serang&output=embed"></iframe>
+  </div>
+  <div class="f-cols">
+    <div><h4>Manufaktur</h4><p>Kejuruan Teknik Manufaktur BBPVP Serang.</p></div>
+    <div>
+      <ul>
+        <li><a href="#hero">Beranda</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#tentang">About</a></li>
+        <li><a href="#kelas">Kelas</a></li>
+        <li><a href="#testimoni">Testimoni</a></li>
+      </ul>
+    </div>
+    <div><h4>Kontak kami</h4><p>Alamat: BBPVP Serang, Banten<br>Telepon: (isi nomor telepon)<br>Email: bbpvpserangmanufaktur@gmail.com</p></div>
+    <div><h4>Kontak kami</h4><p>Instagram : @manufakturbbpvpserang <br>WhatsApp: (isi nomor)<br>Jam layanan: </p></div>
+  </div>
+  <div class="copy">&copy; 2026 Kejuruan Manufaktur BBPVP Serang</div>
+</footer>
+
+<a class="wa-float wa-link" aria-label="Chat WhatsApp" data-text="Halo, saya ingin bertanya tentang pelatihan Manufaktur BBPVP Serang">
+  <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.2 2 11.4c0 2.1.8 4.1 2.1 5.7L3 22l5.1-1.7c1.2.5 2.5.7 3.9.7 5.5 0 10-4.2 10-9.4S17.5 2 12 2z"/></svg>
+</a>
+
+<script>
+
+  // ===== Slider testimoni =====
+const track = document.getElementById('testi');
+const stepSize = () => {
+  const c = track.querySelector('.t-card');
+  return c ? c.offsetWidth + 18 : 300;   // lebar kartu + gap
+};
+
+function slide(dir) {
+  const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  if (dir > 0 && atEnd) track.scrollTo({ left: 0, behavior: 'smooth' });       // balik ke awal
+  else if (dir < 0 && track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+  else track.scrollBy({ left: dir * stepSize(), behavior: 'smooth' });
+}
+document.getElementById('tNext').addEventListener('click', () => slide(1));
+document.getElementById('tPrev').addEventListener('click', () => slide(-1));
+
+// autoplay (berhenti saat disentuh/di-hover)
+let auto = setInterval(() => slide(1), 4500);
+const stop  = () => clearInterval(auto);
+const start = () => { stop(); auto = setInterval(() => slide(1), 4500); };
+track.addEventListener('mouseenter', stop);
+track.addEventListener('mouseleave', start);
+track.addEventListener('touchstart', stop, { passive: true });
+track.addEventListener('touchend', start);
+
+// geser dengan mouse (drag)
+let down = false, startX = 0, startLeft = 0;
+track.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'mouse') return;   // di HP sudah bisa swipe bawaan
+  down = true; startX = e.clientX; startLeft = track.scrollLeft;
+  track.classList.add('dragging');
+});
+window.addEventListener('pointermove', e => {
+  if (!down) return;
+  track.scrollLeft = startLeft - (e.clientX - startX);
+});
+window.addEventListener('pointerup', () => {
+  if (!down) return;
+  down = false;
+  track.classList.remove('dragging');
+  track.scrollBy({ left: 0, behavior: 'smooth' }); // snap ke kartu terdekat
+});
+function moveWatermark() {
+  if (reduceMotion) return;
+  const vh = window.innerHeight;
+  const range = window.innerWidth * 0.16; // jarak geser, ubah sesuai selera
+
+  wms.forEach((w, k) => {
+    const r = w.parentElement.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, (vh - r.top) / (vh + r.height))); // 0 → 1 saat section lewat
+    const dir = k % 2 === 0 ? 1 : -1; // genap: ke kanan, ganjil: ke kiri
+    w.style.setProperty('--wx', ((p - 0.5) * 2 * range * dir).toFixed(1) + 'px');
+  });
+}
+    const wms = [...document.querySelectorAll('.watermark')];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+window.addEventListener('scroll', moveWatermark, { passive: true });
+window.addEventListener('resize', moveWatermark);
+moveWatermark();
+(function () {
+  const hero = document.getElementById('hero');
+  const slides = [...hero.querySelectorAll('.slide')];
+  const indBox = document.getElementById('indicators');
+  const counter = document.getElementById('counter');
+  const DURATION = 4000;
+  let i = 0, timer;
+
+  hero.style.setProperty('--dur', DURATION + 'ms');
+
+  // pasang background: foto (kalau ada) di atas gradasi cadangan
+  slides.forEach(s => {
+    const bg = s.querySelector('.bg');
+    const fb = s.dataset.fallback;
+    bg.style.backgroundImage = fb;
+    const src = s.dataset.img;
+    if (src) {
+      const img = new Image();
+      img.onload = () => { bg.style.backgroundImage = `url("${src}")`; };
+      img.src = src;
+    }
+  });
+
+  // indikator
+  const dots = slides.map((_, n) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Slide ' + (n + 1));
+    b.addEventListener('click', () => { go(n); restart(); });
+    indBox.appendChild(b);
+    return b;
+  });
+
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => {
+      d.classList.remove('active');
+      if (k === i) { void d.offsetWidth; d.classList.add('active'); }
+    });
+    counter.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  }
+  function restart() {
+    clearInterval(timer);
+    timer = setInterval(() => go(i + 1), DURATION);
+  }
+
+  hero.querySelector('.prev').addEventListener('click', () => { go(i - 1); restart(); });
+  hero.querySelector('.next').addEventListener('click', () => { go(i + 1); restart(); });
+
+
+  // keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') { go(i - 1); restart(); }
+    if (e.key === 'ArrowRight') { go(i + 1); restart(); }
+  });
+
+  // swipe di HP
+  let x0 = null;
+  hero.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  hero.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) { go(i + (dx < 0 ? 1 : -1)); restart(); }
+    x0 = null;
+  });
+
+  go(0);
+  restart();
+
+  // foto opsional untuk section lain (dengan gradasi cadangan)
+  document.querySelectorAll('.zoom, .about-img, .avatar').forEach(el => {
+    if (el.dataset.fallback) el.style.backgroundImage = el.dataset.fallback;
+    const src = el.dataset.img;
+    if (src) {
+      const im = new Image();
+      im.onload = () => {
+        el.style.backgroundImage = `url("${src}")`;
+        const svg = el.querySelector('svg'); if (svg) svg.remove();
+      };
+      im.src = src;
+    }
+  });
+
+ // ===== Testimoni dari Google Sheet =====
+const TESTI_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz_k2-syvj_5E3XW44gOaMwZRw-HyPnPsXjn85AQAMkeipd9bT81vvOL9DFEB4cSQ4y/exec';
+const list = document.getElementById('testi');
+
+function testiCard(d) {
+  const card = document.createElement('div');
+  card.className = 't-card';
+  const p = document.createElement('p'); p.textContent = d.testimoni || '';
+  const who = document.createElement('div'); who.className = 'who';
+  const pic = document.createElement('div'); pic.className = 'pic';
+  pic.textContent = String(d.nama || '?').trim().charAt(0).toUpperCase() || '?';
+  const meta = document.createElement('div');
+  const b = document.createElement('b'); b.textContent = d.nama || '';
+  const s = document.createElement('small');
+  s.textContent = [d.pelatihan, d.batch].filter(Boolean).join(' \u00B7 ');
+  meta.append(b, s); who.append(pic, meta); card.append(p, who);
+  return card;
+}
+function testiMessage(text) {
+  const c = document.createElement('div');
+  c.className = 't-card t-empty';
+  const p = document.createElement('p'); p.textContent = text;
+  c.append(p);
+  list.replaceChildren(c);
+}
+async function loadTestimoni() {
+  if (!TESTI_ENDPOINT) { testiMessage('Jadilah alumni pertama yang berbagi cerita.'); return; }
+  try {
+    const res = await fetch(TESTI_ENDPOINT + '?action=list');
+    const json = await res.json();
+    if (!json.ok) throw new Error('bad response');
+    if (!json.data.length) { testiMessage('Jadilah alumni pertama yang berbagi cerita.'); return; }
+    list.replaceChildren(...json.data.map(testiCard));
+  } catch (err) {
+    testiMessage('Testimoni belum dapat dimuat saat ini.');
+  }
+}
+loadTestimoni();
+
+  // ===== WhatsApp =====
+  const WA_NUMBER = '62XXXXXXXXXX'; // GANTI dengan nomor WhatsApp resmi (format 62...)
+  document.querySelectorAll('.wa-link').forEach(a => {
+    a.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(a.dataset.text || '');
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+
+  // ===== Navbar: berubah saat scroll + menu aktif + burger =====
+  const nav = document.querySelector('.nav');
+  const burger = nav.querySelector('.burger');
+  const links = [...nav.querySelectorAll('ul a')].filter(a => {
+    const h = a.getAttribute('href') || '';
+    return h.startsWith('#') && h.length > 1;
+  });
+  const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    const y = window.scrollY + window.innerHeight * 0.35;
+    let cur = 0;
+    secs.forEach((s, k) => { if (s && s.offsetTop <= y) cur = k; });
+    links.forEach((a, k) => a.classList.toggle('active', k === cur));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  burger.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+  nav.querySelectorAll('ul a').forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ===== Gear (blueprint) =====
+//   document.querySelectorAll('svg.gear').forEach(svg => {
+//     const n = +svg.dataset.teeth || 12;
+//     let t = '<circle r="64"/><circle r="30"/><circle r="8"/>';
+//     for (let k = 0; k < n; k++) t += `<rect x="-8" y="-88" width="16" height="22" rx="2" transform="rotate(${(k * 360 / n).toFixed(2)})"/>`;
+//     svg.innerHTML = t;
+//   });
+
+  // ===== Parallax hero (mouse + scroll) =====
+  hero.addEventListener('mousemove', e => {
+    const r = hero.getBoundingClientRect();
+    hero.style.setProperty('--mx', ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
+    hero.style.setProperty('--my', ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+  });
+  hero.addEventListener('mouseleave', () => { hero.style.setProperty('--mx', 0); hero.style.setProperty('--my', 0); });
+
+  // ===== Progress bar + scroll parallax =====
+  const bar = document.getElementById('progressBar');
+  function onScroll2() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ')';
+    if (window.scrollY < window.innerHeight * 1.2) hero.style.setProperty('--sy', window.scrollY);
+  }
+  window.addEventListener('scroll', onScroll2, { passive: true });
+  onScroll2();
+
+  // ===== Loading screen =====
+  const loader = document.getElementById('loader');
+  function hideLoader() { loader.classList.add('hide'); setTimeout(() => loader.remove(), 700); }
+  if (document.readyState === 'complete') setTimeout(hideLoader, 900);
+  else window.addEventListener('load', () => setTimeout(hideLoader, 900));
+
+  // ===== Lightbox galeri =====
+  const lb = document.getElementById('lb');
+  document.querySelectorAll('.gal-item').forEach(b => b.addEventListener('click', () => {
+    lb.querySelector('.lb-img').style.backgroundImage = getComputedStyle(b.querySelector('.zoom')).backgroundImage;
+    lb.querySelector('.lb-cap').textContent = b.querySelector('.cap').textContent;
+    lb.showModal();
+  }));
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.closest('.lb-close')) lb.close(); });
+
+  // ===== Counter animasi =====
+  const fmt = new Intl.NumberFormat('id-ID');
+  const co = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    co.unobserve(e.target);
+    const el = e.target, end = +el.dataset.count, t0 = performance.now(), D = 1800;
+    (function step(t) {
+      const p = Math.min((t - t0) / D, 1);
+      el.textContent = fmt.format(Math.round(end * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }), { threshold: 0.4 });
+  document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
+
+  // ===== Muncul saat scroll =====
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const targets = document.querySelectorAll(
+      '.stat, .about > *, #kelas .inner > div:first-child, .card, #instruktur h2, .person, #testimoni h2, .t-card, .t-btn, .map, .f-cols > div, .eyebrow, #galeri h2, #faq h2, .gal-item, details.faq'
+    );
+    const ro = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      ro.unobserve(e.target);
+      const el = e.target;
+      el.classList.add('in');
+      setTimeout(() => { el.classList.remove('reveal', 'in'); el.style.transitionDelay = ''; }, 1300);
+    }), { threshold: 0.15 });
+    targets.forEach(el => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = (Array.prototype.indexOf.call(el.parentElement.children, el) % 4) * 90 + 'ms';
+      ro.observe(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>
