@@ -408,8 +408,8 @@
   /* ===== GALERI ===== */
   #galeri { background: #fbfcfd; color: var(--navy); }
   #galeri h2 { text-align: center; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; }
-  .gallery { max-width: 1150px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: clamp(130px, 16vw, 200px); gap: 14px; }
-  .gal-item { position: relative; overflow: hidden; border: 0; padding: 0; border-radius: 16px; cursor: zoom-in; background: var(--navy); color: #fff; font-family: inherit; }
+  .gallery { max-width: 1150px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: clamp(130px, 16vw, 200px); gap: 5px; }
+  .gal-item { position: relative; overflow: hidden; border: 0; padding: 0; border-radius: 5px; cursor: zoom-in; background: var(--navy); color: #fff; font-family: inherit; }
   .gal-item .zoom { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .7s ease; }
   .gal-item:hover .zoom, .gal-item:focus-visible .zoom { transform: scale(1.1); }
   .gal-item .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 38px 16px 14px; text-align: left; font-weight: 800; font-size: .95rem;
@@ -520,7 +520,7 @@ Manufaktur</div></div>
     </div>
   </div>
 
-  <div class="slide" data-img="Image/Bubut.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f 60%,#070c33)">
+  <div class="slide" data-img="image/Bubut.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f 60%,#070c33)">
     <div class="bg"></div>
     <div class="content">
       <div class="dots-deco"><i></i><i></i><i></i><i></i></div>
@@ -559,14 +559,18 @@ Manufaktur</div></div>
 <!-- ===== TENTANG KAMI ===== -->
 <section class="wrap" id="tentang">
   <div class="about">
+<<<<<<< HEAD
     <div class="about-img" data-img="Image/FotoBubut.JPG" role="img" aria-label="Foto kejuruan manufaktur"></div>
+=======
+    <div class="about-img" data-img="image/FotoBubut.JPG" role="img" aria-label="Foto kejuruan manufaktur"></div>
+>>>>>>> 16fa446 (Update codingan lagi)
     <div>
       <h2>Tentang Kami</h2>
       <p>Kejuruan Teknik Manufaktur di BBPVP Serang adalah bidang pelatihan vokasi milik Kementerian Ketenagakerjaan RI guna mencetak tenaga kerja siap pakai dan bersertifikasi.</p>
       <div class="logos">
         <!-- Ganti dengan logo resmi: <img src="img/logo-kemnaker.png" alt="Kemnaker"> -->
-        <span class="logo-ph"><img src="Image/kemnaker.png" alt="Kemnaker"> </span>
-        <span class="logo-ph"><img src="Image/pelatihanvokasi.png" alt="Kemnaker"></span>
+        <span class="logo-ph"><img src="image/kemnaker.png" alt="Kemnaker"> </span>
+        <span class="logo-ph"><img src="image/pelatihanvokasi.png" alt="Kemnaker"></span>
       </div>
     </div>
   </div>
@@ -582,7 +586,7 @@ Manufaktur</div></div>
     </div>
     <div class="cards">
       <article class="card">
-        <div class="zoom" data-img="Image/Bubut.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f)"></div>
+        <div class="zoom" data-img="image/Bubut.jpg" data-fallback="linear-gradient(135deg,#34507f,#13245f)"></div>
         <div class="c-body">
           <span class="c-title">Pengoperasian Mesin Bubut.</span>
           <div class="c-extra"><p class="c-desc">Dasar pengoperasian mesin bubut konvensional secara aman dan sesuai standar industri.</p></div>
@@ -610,7 +614,7 @@ Manufaktur</div></div>
         <div class="c-body">
           <span class="c-title">Predictive Maintenance untuk Mesin Produksi</span>
           <div class="c-extra"><p class="c-desc">Memantau kondisi mesin dengan sensor untuk memprediksi kerusakan sebelum terjadi.</p></div>
-          <a href="kelaspredictive.html" class="c-btn ">Lihat Kelas</a>
+          <a href="#" class="c-btn ">Lihat Kelas</a>
         </div>
       </article>
     </div>
@@ -628,8 +632,8 @@ Manufaktur</div></div>
     <button class="gal-item gg2" type="button"><div class="zoom" data-img="Image/dokumentasi2.JPG" data-fallback="linear-gradient(135deg,#1c2a66,#0b1654)"></div><span class="cap">Pengoperasian CNC</span></button>
     <button class="gal-item gg3" type="button"><div class="zoom" data-img="Image/dokumentasi3.JPG" data-fallback="linear-gradient(135deg,#27407f,#0f1c5c)"></div><span class="cap">Pengoperasian CNC</span></button>
     <button class="gal-item gg4" type="button"><div class="zoom" data-img="Image/dokumentasi4.JPG" data-fallback="linear-gradient(135deg,#3a5a99,#16286b)"></div><span class="cap">Desain CAD 3D</span></button>
-    <button class="gal-item gg5" type="button"><div class="zoom" data-img="Image/dokumentasi5.JPG" data-fallback="linear-gradient(135deg,#2b3350,#12183a)"></div><span class="cap">Praktik Mesin Bubut</span></button>
-    <button class="gal-item gg6" type="button"><div class="zoom" data-img="Image/dokumentasi6.JPG" data-fallback="linear-gradient(135deg,#4f77a8,#1c2a66)"></div><span class="cap">Pengoperasian CNC</span></button>
+    <button class="gal-item gg5" type="button"><div class="zoom" data-img="Image/dokumentasi5.PNG" data-fallback="linear-gradient(135deg,#2b3350,#12183a)"></div><span class="cap">Praktik Mesin Bubut</span></button>
+    <button class="gal-item gg6" type="button"><div class="zoom" data-img="Image/dokumentasi6.PNG" data-fallback="linear-gradient(135deg,#4f77a8,#1c2a66)"></div><span class="cap">Pengoperasian Mesin Bubut</span></button>
 
   </div>
 </section>
@@ -713,8 +717,8 @@ Manufaktur</div></div>
         <li><a href="#testimoni">Testimoni</a></li>
       </ul>
     </div>
-    <div><h4>Kontak kami</h4><p>Alamat: BBPVP Serang, Banten<br>Telepon: (isi nomor telepon)<br>Email: bbpvpserangmanufaktur@gmail.com</p></div>
-    <div><h4>Kontak kami</h4><p>Instagram : @manufakturbbpvpserang <br>WhatsApp: (isi nomor)<br>Jam layanan: </p></div>
+    <div><h4>Kontak kami</h4><p>Alamat: BBPVP Serang, Banten<br>Email: bbpvpserangmanufaktur@gmail.com</p></div>
+    <div><h4>Kontak kami</h4><p>Instagram : @manufakturbbpvpserang <br>Jam layanan: </p></div>
   </div>
   <div class="copy">&copy; 2026 Kejuruan Manufaktur BBPVP Serang</div>
 </footer>
